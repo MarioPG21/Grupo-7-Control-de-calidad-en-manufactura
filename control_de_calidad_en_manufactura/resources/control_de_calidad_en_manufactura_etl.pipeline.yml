@@ -1,0 +1,20 @@
+# The main pipeline for control_de_calidad_en_manufactura
+
+resources:
+  pipelines:
+    control_de_calidad_en_manufactura_etl:
+      name: control_de_calidad_en_manufactura_etl
+      catalog: ${var.catalog}
+      schema: ${var.schema}
+      serverless: true
+      root_path: "../src/control_de_calidad_en_manufactura_etl"
+
+      libraries:
+        - glob:
+            include: ../src/control_de_calidad_en_manufactura_etl/transformations/**
+
+      environment:
+        dependencies:
+          # We include every dependency defined by pyproject.toml by defining an editable environment
+          # that points to the folder where pyproject.toml is deployed.
+          - --editable ${workspace.file_path}
