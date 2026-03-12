@@ -6,9 +6,9 @@ Rules are divided into logical domains to facilitate auditing
 and maintenance by the data engineering and quality assurance teams.
 """
 
-###############################################################################
-# Functions
-###############################################################################
+
+# ----------------- Functions -----------------
+
 
 def get_identity_and_time_rules():
     """

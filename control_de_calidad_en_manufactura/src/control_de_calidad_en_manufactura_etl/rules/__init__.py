@@ -8,9 +8,9 @@ flow.
 """
 
 
-###############################################################################
-# Imports
-###############################################################################
+
+# ----------------- Imports -----------------
+
 
 # Specific rule generation functions from our local domain modules
 
@@ -20,9 +20,8 @@ from .labels import get_label_rules
 
 
 
-###############################################################################
-# Functions
-###############################################################################
+
+# ----------------- Functions -----------------
 
 def _get_all_rules_as_list_of_dict():
     """
@@ -30,7 +29,7 @@ def _get_all_rules_as_list_of_dict():
     combining inspections and labels into a single list.
     """
     all_rules = []
-    all_rules.extend(get_inspections_rules())
+    all_rules.extend(get_inspection_rules())
     all_rules.extend(get_label_rules())
     
     return all_rules

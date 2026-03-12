@@ -6,9 +6,7 @@ It ensures that the labels can be successfully joined back to their
 original unit inspections and that the defect indicators are valid.
 """
 
-###############################################################################
-# Functions
-###############################################################################
+# ----------------- Functions -----------------
 
 def get_identity_rules():
     """
