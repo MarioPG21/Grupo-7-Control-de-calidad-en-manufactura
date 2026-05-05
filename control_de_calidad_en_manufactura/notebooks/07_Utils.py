@@ -132,20 +132,10 @@ properties_df = spark.sql(f"SHOW TBLPROPERTIES {training_table}")
 semantic_version_row = properties_df.filter("key = 'ml.delta_semantic_version'").first()
 delta_semantic_version = int(semantic_version_row["value"]) if semantic_version_row else 0
 
-if delta_semantic_version == 0:
-    # First version of the table: training from 2020 to 2022, validation 2023, and test 2024 (reserved)
-    train_end = datetime(2022, 12, 31)
-    validation_end = datetime(2023, 12, 31)
-else:
-    # Subsequent versions: rolling window anchored to the previous cycle maximum date.
-    # ml.data_previous_max_date is the maximum timestamp of the dataset before the last
-    # overwrite, persisted in the table properties by the data generation notebook.
-    # Everything after that date in the current table becomes the test window.
-    # Validation is the VALIDATION_WINDOW_MONTHS immediately before that cutoff.
-    # Training is the TRAINING_WINDOW_MONTHS immediately before validation.
-    previous_max_date_row = properties_df.filter("key = 'ml.data_previous_max_date'").first()
-    validation_end = datetime.strptime(previous_max_date_row["value"], "%Y-%m-%d")
-    train_end = validation_end - relativedelta(months = VALIDATION_WINDOW_MONTHS)
+
+train_end = datetime(2023, 12, 31)
+validation_end = datetime(2024, 6, 30)
+
 
 train_start = train_end - relativedelta(months = TRAINING_WINDOW_MONTHS)
 
@@ -230,7 +220,8 @@ exclude_columns = [
     "unit_id",
     "machine_id",
     "material_batch_id",
-    "timestamp"
+    "timestamp",
+    "year_month"
 ]
 
 numeric_columns = []

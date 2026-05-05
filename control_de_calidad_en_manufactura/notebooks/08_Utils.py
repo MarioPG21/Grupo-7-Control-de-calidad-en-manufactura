@@ -171,15 +171,6 @@ def build_challenger_hyperparams(candidate_metadata):
 def get_champion_metadata(client, uc_model_name):
     """
     Attempt to retrieve the current `champion` model version and its metadata.
-
-    Returns `None` on a cold start (no `champion` alias yet), allowing the
-    caller to skip the champion-versus-challenger comparison and promote
-    the challenger directly.
-
-    The model artifact URI points to the `challenger_model` artefact logged
-    during the champion's own production evaluation run. This is the model
-    that was trained on `train + validation` and evaluated on `test`, ensuring
-    a symmetric comparison with the new challenger.
     """
     try:
         champion_version = client.get_model_version_by_alias(
@@ -188,6 +179,12 @@ def get_champion_metadata(client, uc_model_name):
         )
         version_number = champion_version.version
         production_run_id = champion_version.tags.get("production_run_id")
+        
+        # AÑADE ESTA VALIDACIÓN DE SEGURIDAD
+        if not production_run_id:
+            print(f"Advertencia: Se encontró la versión {version_number} como champion, pero le falta la etiqueta 'production_run_id'. Se ignorará la comparación.")
+            return None
+
         return {
             "version_number": version_number,
             "production_run_id": production_run_id,
